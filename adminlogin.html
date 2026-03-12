@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Admin Login</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+body{
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+background:linear-gradient(135deg,#e3f7ec,#f4f7f6);
+font-family:'Poppins',sans-serif;
+}
+
+.login-box{
+background:white;
+padding:30px;
+border-radius:12px;
+box-shadow:0 10px 25px rgba(0,0,0,0.1);
+width:300px;
+text-align:center;
+}
+
+input{
+width:100%;
+padding:10px;
+margin:10px 0;
+border:1px solid #ccc;
+border-radius:6px;
+}
+
+button{
+width:100%;
+padding:10px;
+background:#1b8f3a;
+color:white;
+border:none;
+border-radius:6px;
+cursor:pointer;
+}
+
+button:hover{
+background:#157030;
+}
+</style>
+</head>
+<body>
+
+<div class="login-box">
+<h3>Admin Login</h3>
+<input type="password" id="password" placeholder="Enter Password">
+<button onclick="login()">Login</button>
+</div>
+
+<script type="module">
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
+import { getDatabase } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-database.js";
+
+/* FIREBASE CONFIG */
+const firebaseConfig = {
+  apiKey: "YOUR_API_KEY",
+  authDomain: "landinfotg-adee0.firebaseapp.com",
+  databaseURL: "https://landinfotg-adee0-default-rtdb.firebaseio.com",
+  projectId: "landinfotg-adee0",
+  storageBucket: "landinfotg-adee0.firebasestorage.app",
+  messagingSenderId: "264939895013",
+  appId: "1:264939895013:web:2668833e235c438b4dfc0c"
+};
+
+initializeApp(firebaseConfig);
+getDatabase();
+
+/* LOGIN FUNCTION */
+window.login = function(){
+
+let pass = document.getElementById("password").value.trim();
+
+if(pass === "123@987@4567"){   // change password here
+
+localStorage.setItem("adminAuth","true");
+window.location.href = "admin.html";
+
+}else{
+alert("Wrong Password ❌");
+}
+
+};
+
+</script>
+</body>
+</html>
