@@ -466,34 +466,32 @@ loginOverlay.style.display="none";
 
 
 /* ================= DROPDOWN ================= */
+function fillSelect(id, dataArray, placeholder){
 
-function fillSelect(id,dataArray,placeholder){
+    let select = document.getElementById(id);
 
-let select=document.getElementById(id);
+    select.innerHTML = `<option value="">${placeholder}</option>`;
 
-select.innerHTML=`<option value="">${placeholder}</option>`;
+    let unique = [...new Set(dataArray)]
+                    .filter(val => val) // remove empty values
+                    .sort((a, b) => a.localeCompare(b)); // alphabetical sorting
 
-let unique=[...new Set(dataArray)];
-
-unique.forEach(val=>{
-if(val){
-let opt=document.createElement("option");
-opt.value=String(val);
-opt.text=val;
-select.add(opt);
-}
-});
+    unique.forEach(val => {
+        let opt = document.createElement("option");
+        opt.value = String(val);
+        opt.text = val;
+        select.add(opt);
+    });
 
 }
 
 function loadDistricts(){
 
-let districts=allData.map(i=>i.district);
+    let districts = allData.map(i => i.district);
 
-fillSelect("district",districts,"Select District");
+    fillSelect("district", districts, "Select District");
 
 }
-
 
 /* ================= FILTER SYSTEM ================= */
 
