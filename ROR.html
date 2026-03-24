@@ -386,22 +386,22 @@ loginOverlay.style.display="none";
 
 function loadDistricts(){
 
-district.innerHTML=`<option value="">Select District</option>`;
+    district.innerHTML = `<option value="">Select District</option>`;
 
-let unique=[...new Set(allData.map(i=>i.district))];
+    let unique = [...new Set(
+        allData.map(i => i.district?.trim())
+    )]
+    .filter(val => val) // remove empty
+    .sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
 
-unique.forEach(val=>{
+    unique.forEach(val => {
 
-if(val){
+        let opt = document.createElement("option");
+        opt.value = val;
+        opt.text = val;
+        district.add(opt);
 
-let opt=document.createElement("option");
-opt.value=val;
-opt.text=val;
-district.add(opt);
-
-}
-
-});
+    });
 
 }
 
