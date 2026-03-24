@@ -403,14 +403,17 @@ fillSelect("district",set,"Select District");
 
 
 /* ================= FILL DROPDOWN ================= */
-
 function fillSelect(id,data,placeholder){
 
 let select = document.getElementById(id);
 
 select.innerHTML = `<option value="">${placeholder}</option>`;
 
-data.forEach(val=>{
+let sortedData = Array.from(data).sort((a,b)=> 
+  a.localeCompare(b, undefined, { sensitivity: 'base' })
+);
+
+sortedData.forEach(val=>{
 let opt = document.createElement("option");
 opt.value = val;
 opt.text = val;
