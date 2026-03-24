@@ -292,28 +292,30 @@ loadDistricts();
 
 function loadDistricts(){
 
-let setData = new Set();
+    let setData = new Set();
 
-allData.forEach(i=>{
-if(i.district) setData.add(i.district);
-});
+    allData.forEach(i => {
+        if(i.district) setData.add(i.district);
+    });
 
-fillSelect("district",[...setData],"Select District");
+    let sortedData = [...setData].sort((a, b) => a.localeCompare(b));
+
+    fillSelect("district", sortedData, "Select District");
 
 }
 
 
-function fillSelect(id,data,placeholder){
+function fillSelect(id, data, placeholder){
 
-let select=document.getElementById(id);
-select.innerHTML=`<option value="">${placeholder}</option>`;
+    let select = document.getElementById(id);
+    select.innerHTML = `<option value="">${placeholder}</option>`;
 
-data.forEach(val=>{
-let opt=document.createElement("option");
-opt.value=val;
-opt.text=val;
-select.add(opt);
-});
+    data.forEach(val => {
+        let opt = document.createElement("option");
+        opt.value = val;
+        opt.text = val;
+        select.add(opt);
+    });
 
 }
 
