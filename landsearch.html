@@ -391,34 +391,38 @@ loadDistricts();
 
 function loadDistricts(){
 
-let set = new Set();
+    let set = new Set();
 
-allData.forEach(i=>{
-if(i.district) set.add(i.district);
-});
+    allData.forEach(i=>{
+        if(i.district){
+            set.add(i.district.trim()); // trim spaces
+        }
+    });
 
-fillSelect("district",set,"Select District");
+    let sortedDistricts = Array.from(set)
+        .sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
+
+    fillSelect("district", sortedDistricts, "Select District");
 
 }
 
 
 /* ================= FILL DROPDOWN ================= */
-function fillSelect(id,data,placeholder){
 
-let select = document.getElementById(id);
+function fillSelect(id, data, placeholder){
 
-select.innerHTML = `<option value="">${placeholder}</option>`;
+    let select = document.getElementById(id);
 
-let sortedData = Array.from(data).sort((a,b)=> 
-  a.localeCompare(b, undefined, { sensitivity: 'base' })
-);
+    select.innerHTML = `<option value="">${placeholder}</option>`;
 
-sortedData.forEach(val=>{
-let opt = document.createElement("option");
-opt.value = val;
-opt.text = val;
-select.add(opt);
-});
+    data.forEach(val=>{
+        if(val){ // avoid empty values
+            let opt = document.createElement("option");
+            opt.value = val.trim();
+            opt.text = val.trim();
+            select.add(opt);
+        }
+    });
 
 }
 
