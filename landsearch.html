@@ -415,26 +415,17 @@ function fillSelect(id, data, placeholder){
 
     select.innerHTML = `<option value="">${placeholder}</option>`;
 
-    data.forEach((val, index) => {   
-        if(val){ 
+    data.forEach(val=>{
+        if(val){ // avoid empty values
             let opt = document.createElement("option");
-
-            let cleanVal = val.toString().match(/^[^.\s]+/)[0];
-
-            opt.value = cleanVal;
-
-            // 🔥 condition here
-            if(id === "survey"){
-                opt.text = cleanVal;
-            } else {
-                opt.text = (index + 1) + ". " + cleanVal;
-            }
-
+            opt.value = val.trim();
+            opt.text = val.trim();
             select.add(opt);
         }
     });
 
 }
+
 
 /* ================= FILTER SYSTEM ================= */
 
@@ -494,23 +485,17 @@ if(i.district === district.value &&
    i.mandal === mandal.value &&
    i.village === this.value){
 
-// 🔥 FIX HERE
-let cleanSurvey = i.survey.toString().match(/^[^.\s]+/)[0];
-
-set.add(cleanSurvey);
+set.add(i.survey);
 
 }
 });
 
-let sortedSurvey = Array.from(set).sort((a,b) => 
-    a.localeCompare(b, undefined, {numeric:true})
-);
-
-fillSelect("survey", sortedSurvey, "Select Survey No");
+fillSelect("survey",set,"Select Survey No");
 
 survey.style.display="block";
 
 };
+
 
 /* ================= MASK PPB ================= */
 
