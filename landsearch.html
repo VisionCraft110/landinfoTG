@@ -420,12 +420,8 @@ function fillSelect(id, data, placeholder){
             let opt = document.createElement("option");
             opt.value = val.trim();
 
-            // ✅ Serial number only for villages
-            if(id === "village"){
-                opt.text = (index + 1) + ". " + val.trim();
-            } else {
-                opt.text = val.trim();
-            }
+            // ✅ Serial number for ALL
+            opt.text = (index + 1) + ". " + val.trim();
 
             select.add(opt);
         }
