@@ -415,11 +415,18 @@ function fillSelect(id, data, placeholder){
 
     select.innerHTML = `<option value="">${placeholder}</option>`;
 
-    data.forEach(val=>{
-        if(val){ // avoid empty values
+    data.forEach((val, index) => {
+        if(val){ 
             let opt = document.createElement("option");
             opt.value = val.trim();
-            opt.text = val.trim();
+
+            // ✅ Serial number only for villages
+            if(id === "village"){
+                opt.text = (index + 1) + ". " + val.trim();
+            } else {
+                opt.text = val.trim();
+            }
+
             select.add(opt);
         }
     });
