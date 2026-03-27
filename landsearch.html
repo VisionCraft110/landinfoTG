@@ -415,13 +415,16 @@ function fillSelect(id, data, placeholder){
 
     select.innerHTML = `<option value="">${placeholder}</option>`;
 
-    data.forEach((val, index) => {
+    data.forEach((val, index) => {   // ✅ index added
         if(val){ 
             let opt = document.createElement("option");
-            opt.value = val.trim();
 
-            // ✅ Serial number for ALL
-            opt.text = (index + 1) + ". " + val.trim();
+            let cleanVal = val.toString().split(".")[0].trim();
+
+            opt.value = cleanVal;
+
+            // ✅ serial number
+            opt.text = (index + 1) + ". " + cleanVal;
 
             select.add(opt);
         }
