@@ -419,20 +419,22 @@ function fillSelect(id, data, placeholder){
         if(val){ 
             let opt = document.createElement("option");
 
-            // 🔥 Strong cleaning
             let cleanVal = val.toString().match(/^[^.\s]+/)[0];
 
             opt.value = cleanVal;
 
-            // ✅ Serial number
-            opt.text = (index + 1) + ". " + cleanVal;
+            // 🔥 condition here
+            if(id === "survey"){
+                opt.text = cleanVal;
+            } else {
+                opt.text = (index + 1) + ". " + cleanVal;
+            }
 
             select.add(opt);
         }
     });
 
 }
-
 
 /* ================= FILTER SYSTEM ================= */
 
