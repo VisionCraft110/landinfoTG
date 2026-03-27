@@ -384,7 +384,6 @@ ${l.documentImage ? `<img src="${l.documentImage}" width="60">` : '-'}
 <td>${l.documentId||'-'}</td>
 <td>
 
-<button onclick="editLand('${l.firebaseKey}')">Edit</button>
 
 <button class="delete-btn"
  onclick="deleteLand('${l.firebaseKey}')">
@@ -404,29 +403,7 @@ window.editLand = async function(key){
 
   const data = await window.readFromDatabase("lands/" + key);
 
-  document.getElementById("district").value = data.district || "";
-  document.getElementById("mandal").value = data.mandal || "";
-  document.getElementById("village").value = data.village || "";
-  document.getElementById("survey").value = data.survey || "";
-
-  document.getElementById("pattadar").value = data.pattadar || "";
-  document.getElementById("father").value = data.father || "";
-  document.getElementById("ppb").value = data.ppb || "";
-  document.getElementById("kyc").value = data.kyc || "";
-
-  document.getElementById("acres").value = data.acres || "";
-  document.getElementById("landStatus").value = data.landStatus || "";
-  document.getElementById("nature").value = data.nature || "";
-  document.getElementById("qualification").value = data.qualification || "";
-  document.getElementById("marketValue").value = data.marketValue || "";
-
-  document.getElementById("documentId").value = data.documentId || "";
-
-  window.editKey = key;
-
-  alert("Edit mode ON ✏️");
-};
-
+  
 window.deleteLand = async function(firebaseKey){
 
 if(!confirm("Delete this record?")) return;
