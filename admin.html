@@ -397,27 +397,50 @@ Delete
 }
 
 /* ================= DELETE LAND ================= */
+
+/* ================= EDIT LAND ================= */
 window.editKey = null;
 
 window.editLand = async function(key){
 
   const data = await window.readFromDatabase("lands/" + key);
 
-  
+  if(!data) return;
+
+  document.getElementById("district").value = data.district || "";
+  document.getElementById("mandal").value = data.mandal || "";
+  document.getElementById("village").value = data.village || "";
+  document.getElementById("survey").value = data.survey || "";
+  document.getElementById("pattadar").value = data.pattadar || "";
+  document.getElementById("father").value = data.father || "";
+  document.getElementById("ppb").value = data.ppb || "";
+  document.getElementById("kyc").value = data.kyc || "";
+  document.getElementById("acres").value = data.acres || "";
+  document.getElementById("landStatus").value = data.landStatus || "";
+  document.getElementById("nature").value = data.nature || "";
+  document.getElementById("qualification").value = data.qualification || "";
+  document.getElementById("marketValue").value = data.marketValue || "";
+  document.getElementById("documentId").value = data.documentId || "";
+
+  window.editKey = key;
+};
+
+/* ================= DELETE LAND ================= */
 window.deleteLand = async function(firebaseKey){
 
-if(!confirm("Delete this record?")) return;
+  if(!confirm("Delete this record?")) return;
 
-try{
-await window.deleteFromDatabase("lands/"+firebaseKey);
-alert("Deleted Successfully ✅");
-await loadData();
-}catch(error){
-alert("Error deleting record");
-console.error(error);
-}
+  try{
+    await window.deleteFromDatabase("lands/"+firebaseKey);
+    alert("Deleted Successfully ✅");
+    await loadData();
+  }catch(error){
+    alert("Error deleting record");
+    console.error(error);
+  }
 
-};
+}; 
+ 
 
 /* ================= NOTIFICATION SAVE ================= */
 
