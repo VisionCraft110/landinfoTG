@@ -439,7 +439,11 @@ set.add(i.mandal);
 }
 });
 
-fillSelect("mandal",set,"Select Mandal");
+/* ✅ ONLY CHANGE: sort mandals alphabetically */
+let sortedMandals = Array.from(set)
+.sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
+
+fillSelect("mandal", sortedMandals, "Select Mandal");
 
 survey.style.display="none";
 
