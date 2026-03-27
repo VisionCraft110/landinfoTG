@@ -492,17 +492,23 @@ if(i.district === district.value &&
    i.mandal === mandal.value &&
    i.village === this.value){
 
-set.add(i.survey);
+// 🔥 FIX HERE
+let cleanSurvey = i.survey.toString().match(/^[^.\s]+/)[0];
+
+set.add(cleanSurvey);
 
 }
 });
 
-fillSelect("survey",set,"Select Survey No");
+let sortedSurvey = Array.from(set).sort((a,b) => 
+    a.localeCompare(b, undefined, {numeric:true})
+);
+
+fillSelect("survey", sortedSurvey, "Select Survey No");
 
 survey.style.display="block";
 
 };
-
 
 /* ================= MASK PPB ================= */
 
