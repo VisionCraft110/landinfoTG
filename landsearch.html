@@ -463,9 +463,15 @@ set.add(i.village);
 }
 });
 
-fillSelect("village",set,"Select Village");
+/* ✅ ONLY CHANGE: alphabetical order */
+let sortedVillages = Array.from(set)
+.sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
+
+fillSelect("village", sortedVillages, "Select Village");
 
 survey.style.display="none";
+
+
 
 };
 
