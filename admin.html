@@ -184,6 +184,13 @@ onkeyup="filterTable()">
 </thead>
 <tbody id="dataTable"></tbody>
 </table>
+
+<!-- ✅ ADD THIS -->
+<div style="margin-top:15px;text-align:center;">
+<button onclick="prevPage()">⬅ Prev</button>
+<span id="pageInfo" style="margin:0 10px;font-weight:bold;"></span>
+<button onclick="nextPage()">Next ➡</button>
+  
 </div>
 </div>
 
@@ -208,6 +215,10 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/fireba
 import { getDatabase, ref, set, get, onValue, remove } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-database.js";
 import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } 
 from "https://www.gstatic.com/firebasejs/12.10.0/firebase-storage.js";
+
+let currentPage = 1;
+let perPage = 20;
+let allLands = [];
 /* ================= FIREBASE ================= */
 
 const firebaseConfig = {
@@ -345,27 +356,39 @@ async function loadData(){
 
 const landsData = await window.readFromDatabase("lands");
 
-let lands=[];
+allLands = [];
 
 if(landsData){
 Object.keys(landsData).forEach(key=>{
-lands.push({
+allLands.push({
 firebaseKey:key,
 ...landsData[key]
 });
 });
 }
 
-const table=document.getElementById("dataTable");
-table.innerHTML="";
+/* newest first */
+allLands = allLands.reverse();
 
-if(lands.length===0){
-table.innerHTML="<tr><td colspan='8'>No Records Found</td></tr>";
-return;
+/* show data */
+renderTable();
 }
 
-lands.forEach(l=>{
-table.innerHTML+=`
+function renderTable(){
+
+const table = document.getElementById("dataTable");
+
+let start = (currentPage - 1) * perPage;
+let paginated = allLands.slice(start, start + perPage);
+
+let html = "";
+
+if(paginated.length === 0){
+html = "<tr><td colspan='8'>No Records Found</td></tr>";
+}else{
+
+paginated.forEach(l=>{
+html += `
 <tr>
 <td>${l.district||'-'}</td>
 <td>${l.mandal||'-'}</td>
@@ -374,19 +397,14 @@ table.innerHTML+=`
 <td>${l.pattadar||'-'}</td>
 <td>${l.acres||'-'}</td>
 <td>${l.marketValue||'-'}</td>
-<td>
-${l.surveyImage ? `<img src="${l.surveyImage}" width="60">` : '-'}
-</td>
 
-<td>
-${l.documentImage ? `<img src="${l.documentImage}" width="60">` : '-'}
-</td>
+<td>${l.surveyImage ? `<img loading="lazy" src="${l.surveyImage}" width="60">` : '-'}</td>
+<td>${l.documentImage ? `<img loading="lazy" src="${l.documentImage}" width="60">` : '-'}</td>
+
 <td>${l.documentId||'-'}</td>
+
 <td>
-
-
-<button class="delete-btn"
- onclick="deleteLand('${l.firebaseKey}')">
+<button class="delete-btn" onclick="deleteLand('${l.firebaseKey}')">
 Delete
 </button>
 </td>
@@ -395,6 +413,13 @@ Delete
 });
 
 }
+
+table.innerHTML = html;
+
+/* page info */
+document.getElementById("pageInfo").innerText =
+"Page " + currentPage + " of " + Math.ceil(allLands.length / perPage);
+} 
 
 
 /* ================= EDIT LAND ================= */
@@ -503,8 +528,26 @@ let text = row.innerText.toLowerCase();
 row.style.display = text.includes(value) ? "" : "none";
 });
 
-});
+}); 
+  
+window.nextPage = function(){
+if(currentPage < Math.ceil(allLands.length / perPage)){
+currentPage++;
+renderTable();
+}
+};
+
+window.prevPage = function(){
+if(currentPage > 1){
+currentPage--;
+renderTable();
+}
+};
+
 </script>
 
 </body>
 </html>
+
+
+
