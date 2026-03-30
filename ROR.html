@@ -309,8 +309,7 @@ background:var(--forest-green);
 <select id="district" class="select-box"></select>
 <select id="mandal" class="select-box"></select>
 <select id="village" class="select-box"></select>
-<select id="survey" class="select-box" style="display:none;"></select>
-
+<select id="survey" class="select-box"></select>
 <button class="search-btn" onclick="searchROR()">Search ROR</button>
 <div class="result" id="resultBox"></div>
 </div>
@@ -546,7 +545,7 @@ fillSelect("village",set,"Select Village");
 };
 
 village.onchange = function(){
-
+survey.style.display = "block";
 let set = new Set();
 
 allData.forEach(i=>{
