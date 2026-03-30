@@ -220,6 +220,42 @@ display:none;
 margin:15px 0
 }
 
+/* INPUTS */
+.select-box{
+width:100%;
+padding:12px;
+margin:12px 0;
+border-radius:10px;
+border:1px solid #ccc;
+transition:0.3s;
+}
+
+.select-box:focus{
+border-color:var(--olive);
+box-shadow:0 0 10px rgba(122,132,80,0.3);
+outline:none;
+}
+
+/* BUTTON */
+.search-btn{
+width:100%;
+padding:14px;
+margin-top:15px;
+background:var(--olive);
+color:white;
+border:none;
+border-radius:12px;
+font-size:16px;
+cursor:pointer;
+transition:0.3s;
+}
+
+.search-btn:hover{
+background:var(--forest-green);
+}
+
+/* ================= END ================= */
+  
 </style>
 </head>
 <!-- RIGHT TOGGLE BUTTON -->
@@ -264,14 +300,12 @@ margin:15px 0
 <div class="container">
 <h2>Check ROR Record</h2>
 
-<select class="input-box" id="district">
-<option value="">Select District</option>
-</select>
+<select id="district" class="select-box"></select>
+<select id="mandal" class="select-box"></select>
+<select id="village" class="select-box"></select>
+<select id="survey" class="select-box" style="display:none;"></select>
 
-<input type="text" class="input-box" id="khata" placeholder="Enter Khata / PPB Number">
-
-<button class="btn" onclick="searchROR()">Search ROR</button>
-
+<button class="search-btn" onclick="searchROR()">Search ROR</button>
 <div class="result" id="resultBox"></div>
 </div>
 
@@ -294,7 +328,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/fireba
 import { getDatabase, ref, set, get } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-database.js";
 
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
+  apiKey: "AIzaSyCdBJIbdHuUWaunbiUuLZP-l8YXpL227XE",
   authDomain: "landinfotg-adee0.firebaseapp.com",
   databaseURL: "https://landinfotg-adee0-default-rtdb.firebaseio.com",
   projectId: "landinfotg-adee0",
