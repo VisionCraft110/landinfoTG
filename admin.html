@@ -219,6 +219,7 @@ from "https://www.gstatic.com/firebasejs/12.10.0/firebase-storage.js";
 let currentPage = 1;
 let perPage = 20;
 let allLands = [];
+let filteredLands = [];
 /* ================= FIREBASE ================= */
 
 const firebaseConfig = {
@@ -284,6 +285,15 @@ let documentFile = document.getElementById("documentImage")?.files[0];
 
 let surveyURL = "";
 let documentURL = "";
+
+// KEEP OLD IMAGES DURING EDIT
+if(window.editKey){
+  const oldData = await window.readFromDatabase("lands/" + window.editKey);
+  if(oldData){
+    surveyURL = oldData.surveyImage || "";
+    documentURL = oldData.documentImage || "";
+  }
+}
 
 /* Upload Survey Image */
 if(surveyFile){
@@ -379,7 +389,10 @@ function renderTable(){
 const table = document.getElementById("dataTable");
 
 let start = (currentPage - 1) * perPage;
-let paginated = allLands.slice(start, start + perPage);
+
+let dataToUse = filteredLands.length ? filteredLands : allLands;
+
+let paginated = dataToUse.slice(start, start + perPage);
 
 let html = "";
 
@@ -404,6 +417,11 @@ html += `
 <td>${l.documentId||'-'}</td>
 
 <td>
+<button style="background:#007bff;color:white;border:none;padding:6px 10px;border-radius:6px;cursor:pointer;margin-right:5px;"
+onclick="editLand('${l.firebaseKey}')">
+Edit
+</button>
+
 <button class="delete-btn" onclick="deleteLand('${l.firebaseKey}')">
 Delete
 </button>
@@ -418,7 +436,7 @@ table.innerHTML = html;
 
 /* page info */
 document.getElementById("pageInfo").innerText =
-"Page " + currentPage + " of " + Math.ceil(allLands.length / perPage);
+"Page " + currentPage + " of " + Math.ceil(dataToUse.length / perPage);
 } 
 
 
@@ -517,18 +535,32 @@ if(saveBtn){
 saveBtn.addEventListener("click", saveLand);
 }
 });
+  
 document.getElementById("searchInput")
 .addEventListener("input", function(){
 
 let value = this.value.toLowerCase();
-let rows = document.querySelectorAll("#dataTable tr");
 
-rows.forEach(row=>{
-let text = row.innerText.toLowerCase();
-row.style.display = text.includes(value) ? "" : "none";
+currentPage = 1;
+
+if(!value){
+filteredLands = [];
+renderTable();
+return;
+}
+
+filteredLands = allLands.filter(l =>
+(l.district || "").toLowerCase().includes(value) ||
+(l.mandal || "").toLowerCase().includes(value) ||
+(l.village || "").toLowerCase().includes(value) ||
+(l.survey || "").toLowerCase().includes(value) ||
+(l.pattadar || "").toLowerCase().includes(value) ||
+(l.ppb || "").toLowerCase().includes(value)
+);
+
+renderTable();
+
 });
-
-}); 
   
 window.nextPage = function(){
 if(currentPage < Math.ceil(allLands.length / perPage)){
