@@ -306,10 +306,8 @@ background:var(--forest-green);
 <div class="container">
 <h2>Check ROR Record</h2>
 
-<select id="district" class="select-box" onchange="loadMandals()"></select>
-
-<select id="mandal" class="select-box" onchange="loadVillages()"></select>
-
+<select id="district" class="select-box"></select>
+<select id="mandal" class="select-box"></select>
 <select id="village" class="select-box"></select>
 <select id="survey" class="select-box" style="display:none;"></select>
 
@@ -358,7 +356,9 @@ let currentUser = JSON.parse(localStorage.getItem("currentUser")) || null;
 /* ================= DOM ELEMENTS ================= */
 
 const district = document.getElementById("district");
-const khata = document.getElementById("khata");
+const mandal   = document.getElementById("mandal");
+const village  = document.getElementById("village");
+const survey   = document.getElementById("survey");
 const resultBox = document.getElementById("resultBox");
 
 const loginOverlay = document.getElementById("loginOverlay");
@@ -366,6 +366,8 @@ const userName = document.getElementById("userName");
 const userPhone = document.getElementById("userPhone");
 const userEmail = document.getElementById("userEmail");
 
+
+  
 const downloadPopup = document.getElementById("downloadPopup");
 const loader = document.getElementById("loader");
 const tick = document.getElementById("tick");
@@ -427,10 +429,17 @@ loginOverlay.style.display="none";
 /* ================= LOAD DISTRICTS ================= */
 
 function loadDistricts(){
-   ...
+
+let set = new Set();
+
+allData.forEach(i=>{
+if(i.district) set.add(i.district);
+});
+
+fillSelect("district",set,"Select District");
+
 }
 
-/* ✅ ADD HERE */
 function loadMandals(){
 
 let selectedDistrict = district.value.trim().toLowerCase();
@@ -482,21 +491,95 @@ villageSelect.add(opt);
 });
 
 }
+
+/* ================= FILL DROPDOWN ================= */
+function fillSelect(id,data,placeholder){
+
+let select = document.getElementById(id);
+
+select.innerHTML = `<option value="">${placeholder}</option>`;
+
+let sortedData = Array.from(data).sort((a,b)=> 
+  a.localeCompare(b, undefined, { sensitivity: 'base' })
+);
+
+sortedData.forEach(val=>{
+let opt = document.createElement("option");
+opt.value = val;
+opt.text = val;
+select.add(opt);
+});
+
+}
+
+/* ================= FILTER SYSTEM ================= */
+
+district.onchange = function(){
+
+let set = new Set();
+
+allData.forEach(i=>{
+if(i.district === this.value){
+set.add(i.mandal);
+}
+});
+
+fillSelect("mandal",set,"Select Mandal");
+
+};
+
+mandal.onchange = function(){
+
+let set = new Set();
+
+allData.forEach(i=>{
+if(i.district === district.value &&
+   i.mandal === this.value){
+
+set.add(i.village);
+
+}
+});
+
+fillSelect("village",set,"Select Village");
+
+};
+
+village.onchange = function(){
+
+let set = new Set();
+
+allData.forEach(i=>{
+if(i.district === district.value &&
+   i.mandal === mandal.value &&
+   i.village === this.value){
+
+set.add(i.survey);
+}
+});
+
+fillSelect("survey",set,"Select Survey No");
+
+};
 /* ================= SEARCH ROR ================= */
 
 window.searchROR=function(){
 
-let dist=district.value;
-let kh=khata.value.trim();
+let dist = district.value;
+let man  = mandal.value;
+let vil  = village.value;
+let sur  = survey.value;
 
-if(!dist || !kh){
-alert("Fill all fields");
+if(!dist || !man || !vil || !sur){
+alert("Please select all fields");
 return;
 }
 
-let result=allData.find(i=>
-String(i.district)===dist &&
-String(i.ppb)===kh
+let result = allData.find(i =>
+String(i.district).trim() === dist.trim() &&
+String(i.mandal).trim() === man.trim() &&
+String(i.village).trim() === vil.trim() &&
+String(i.survey).trim() === sur.trim()
 );
 
 if(result){
@@ -518,7 +601,7 @@ resultBox.innerHTML=`
 
 </div>
 
-<button class="btn" onclick="downloadROR('${dist}','${result.survey}','${kh}')">
+<button class="btn" onclick="downloadROR('${dist}','${result.survey}','${result.ppb}')">
 Download ROR
 </button>
 
