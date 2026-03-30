@@ -306,8 +306,10 @@ background:var(--forest-green);
 <div class="container">
 <h2>Check ROR Record</h2>
 
-<select id="district" class="select-box"></select>
-<select id="mandal" class="select-box"></select>
+<select id="district" class="select-box" onchange="loadMandals()"></select>
+
+<select id="mandal" class="select-box" onchange="loadVillages()"></select>
+
 <select id="village" class="select-box"></select>
 <select id="survey" class="select-box" style="display:none;"></select>
 
@@ -425,27 +427,61 @@ loginOverlay.style.display="none";
 /* ================= LOAD DISTRICTS ================= */
 
 function loadDistricts(){
+   ...
+}
 
-    district.innerHTML = `<option value="">Select District</option>`;
+/* ✅ ADD HERE */
+function loadMandals(){
 
-    let unique = [...new Set(
-        allData.map(i => i.district?.trim())
-    )]
-    .filter(val => val) // remove empty
-    .sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
+let selectedDistrict = district.value.trim().toLowerCase();
 
-    unique.forEach(val => {
+let mandalSelect = document.getElementById("mandal");
+mandalSelect.innerHTML = `<option value="">Select Mandal</option>`;
 
-        let opt = document.createElement("option");
-        opt.value = val;
-        opt.text = val;
-        district.add(opt);
+let unique = [...new Set(
+allData
+.filter(i => (i.district || "").trim().toLowerCase() === selectedDistrict)
+.map(i => i.mandal)
+)];
 
-    });
+unique.forEach(val=>{
+if(val){
+let opt = document.createElement("option");
+opt.value = val;
+opt.text = val;
+mandalSelect.add(opt);
+}
+});
 
 }
 
+function loadVillages(){
 
+let selectedDistrict = district.value.trim().toLowerCase();
+let selectedMandal = document.getElementById("mandal").value.trim().toLowerCase();
+
+let villageSelect = document.getElementById("village");
+villageSelect.innerHTML = `<option value="">Select Village</option>`;
+
+let unique = [...new Set(
+allData
+.filter(i =>
+(i.district || "").trim().toLowerCase() === selectedDistrict &&
+(i.mandal || "").trim().toLowerCase() === selectedMandal
+)
+.map(i => i.village)
+)];
+
+unique.forEach(val=>{
+if(val){
+let opt = document.createElement("option");
+opt.value = val;
+opt.text = val;
+villageSelect.add(opt);
+}
+});
+
+}
 /* ================= SEARCH ROR ================= */
 
 window.searchROR=function(){
