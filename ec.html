@@ -399,7 +399,6 @@ const district = document.getElementById("district");
 const mandal = document.getElementById("mandal");
 const village = document.getElementById("village");
 const survey = document.getElementById("survey");
-const khata = document.getElementById("khata");
 
 const resultBox = document.getElementById("resultBox");
 
@@ -505,7 +504,6 @@ fillSelect("mandal",mandals,"Select Mandal");
 fillSelect("village",[],"Select Village");
 
 survey.style.display="none";
-khata.style.display="none";
 
 };
 
@@ -519,51 +517,44 @@ String(i.mandal)===mandal.value)
 fillSelect("village",villages,"Select Village");
 
 survey.style.display="none";
-khata.style.display="none";
 
 };
 
 village.onchange=function(){
 
-let filtered=allData.filter(i=>
-String(i.district)===district.value &&
-String(i.mandal)===mandal.value &&
-String(i.village)===village.value
+let filtered = allData.filter(i =>
+String(i.district).trim() === district.value.trim() &&
+String(i.mandal).trim() === mandal.value.trim() &&
+String(i.village).trim() === village.value.trim()
 );
 
-let surveys=filtered.map(i=>String(i.survey));
-let khatas=filtered.map(i=>String(i.ppb));
+let surveys = filtered.map(i => String(i.survey || "").trim());
 
-fillSelect("survey",surveys,"Select Survey No");
-fillSelect("khata",khatas,"Select Khata No");
+fillSelect("survey", surveys, "Select Survey No");
 
-survey.style.display="block";
-khata.style.display="block";
+survey.style.display = "block";
 
 };
 
 
 /* ================= SEARCH EC ================= */
+window.searchEC = function(){
 
-window.searchEC=function(){
-
-if(!district.value || !mandal.value || !village.value || !survey.value || !khata.value){
+if(!district.value || !mandal.value || !village.value || !survey.value){
 alert("Please select all fields");
 return;
 }
 
-let result=allData.find(i=>
-String(i.district)===district.value &&
-String(i.mandal)===mandal.value &&
-String(i.village)===village.value &&
-String(i.survey)===survey.value &&
-String(i.ppb)===khata.value
+let result = allData.find(i =>
+String(i.district).trim() === district.value.trim() &&
+String(i.mandal).trim() === mandal.value.trim() &&
+String(i.village).trim() === village.value.trim() &&
+String(i.survey).trim() === survey.value.trim()
 );
 
 if(result){
 
 resultBox.innerHTML=`
-
 <h4>Encumbrance Certificate (EC)</h4>
 
 <p><b>Owner:</b> ${result.pattadar}</p>
@@ -577,19 +568,14 @@ resultBox.innerHTML=`
 <button class="search-btn" onclick="downloadEC('${result.district}','${result.survey}','${result.ppb}')">
 Download EC
 </button>
-
 `;
 
 }else{
-
 resultBox.innerHTML="<h4>No EC Record Found</h4>";
-
 }
 
 resultBox.style.display="block";
-
 };
-
 
 /* ================= DOWNLOAD EC ================= */
 
